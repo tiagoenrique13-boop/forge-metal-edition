@@ -1,185 +1,33 @@
-const KEY = 'forge-metal-v1';
-
-const starter = [
-  {
-    id: 'a',
-    name: 'A — Peito + Bíceps',
-    desc: 'Panobianco • foco em força e hipertrofia',
-    ex: [
-      ['Supino reto', 4, 12],
-      ['Supino inclinado', 4, 12],
-      ['Chest press', 3, 12],
-      ['Rosca no cross', 3, 12]
-    ]
-  },
-  {
-    id: 'b',
-    name: 'B — Inferiores',
-    desc: 'Academia do condomínio • controle e técnica',
-    ex: [
-      ['Cadeira extensora', 3, 15],
-      ['Mesa flexora', 3, 15],
-      ['Panturrilha', 3, 15]
-    ]
-  },
-  {
-    id: 'c',
-    name: 'C — Costas + Ombros + Tríceps',
-    desc: 'Panobianco • volume equilibrado',
-    ex: [
-      ['Puxada frontal', 3, 12],
-      ['Remada baixa', 3, 12],
-      ['Elevação lateral', 3, 15],
-      ['Tríceps corda', 3, 12]
-    ]
-  }
-];
-
-let data;
-
-try {
-  data = JSON.parse(localStorage.getItem(KEY));
-} catch (e) {}
-
-if (!data) {
-  data = { workouts: starter, history: [] };
-}
-
-let current = null;
-
-const $ = id => document.getElementById(id);
-
-const esc = s => String(s).replace(/[&<>"']/g, c => ({
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;'
-}[c]));
-
-function save() {
-  localStorage.setItem(KEY, JSON.stringify(data));
-  render();
-}
-
-function render() {
-  $('workoutCount').textContent = data.workouts.length;
-  $('sessionCount').textContent = data.history.length;
-
-  $('workouts').innerHTML = data.workouts.map((w, i) => `
-    <article class="workout" data-id="${w.id}">
-      <span class="kicker">ROUTINE ${String(i + 1).padStart(2, '0')}</span>
-      <h3>${esc(w.name)}</h3>
-      <p>${esc(w.desc || 'Personal training routine')} · ${w.ex.length} exercícios</p>
-    </article>
-  `).join('') || '<div class="empty">Crie sua primeira rotina de treino.</div>';
-
-  $('workouts').querySelectorAll('[data-id]').forEach(el => {
-    el.onclick = () => open(el.dataset.id);
-  });
-
-  $('history').innerHTML = data.history.slice(0, 6).map(h => `
-    <div class="history-item">
-      <span>${esc(h.name)}</span>
-      <small>${new Date(h.date).toLocaleDateString('pt-BR')} · ${h.count} exercícios</small>
-    </div>
-  `).join('') || '<div class="empty">Suas sessões concluídas aparecerão aqui.</div>';
-}
-
-function open(id) {
-  current = id;
-  const w = data.workouts.find(x => x.id === id);
-
-  $('routineTitle').textContent = w.name;
-  $('routineDescription').textContent = w.desc || 'Personalize os exercícios desta rotina.';
-
-  drawExercises();
-  $('routineDialog').showModal();
-}
-
-function drawExercises() {
-  const w = data.workouts.find(x => x.id === current);
-
-  $('exerciseRows').innerHTML = `
-    <div class="exercise-head">
-      <span>EXERCÍCIO</span>
-      <span>SÉRIES</span>
-      <span>REPS</span>
-      <span></span>
-    </div>
-    ${w.ex.map((x, i) => `
-      <div class="exercise-row">
-        <span>${esc(x[0])}</span>
-        <input type="number" min="1" value="${x[1]}" data-i="${i}" data-k="1">
-        <input type="number" min="1" value="${x[2]}" data-i="${i}" data-k="2">
-        <button type="button" data-del="${i}">×</button>
-      </div>
-    `).join('')}
-  `;
-
-  $('exerciseRows').querySelectorAll('input').forEach(el => {
-    el.onchange = () => {
-      w.ex[+el.dataset.i][+el.dataset.k] = Math.max(1, +el.value || 1);
-      save();
-    };
-  });
-
-  $('exerciseRows').querySelectorAll('[data-del]').forEach(el => {
-    el.onclick = () => {
-      w.ex.splice(+el.dataset.del, 1);
-      save();
-      drawExercises();
-    };
-  });
-}
-
-$('newWorkout').onclick = () => {
-  $('routineName').value = '';
-  $('routineDesc').value = '';
-  $('createDialog').showModal();
-};
-
-$('createSave').onclick = e => {
-  e.preventDefault();
-
-  const name = $('routineName').value.trim();
-  if (!name) return;
-
-  data.workouts.push({
-    id: Date.now().toString(),
-    name,
-    desc: $('routineDesc').value.trim(),
-    ex: []
-  });
-
-  $('createDialog').close();
-  save();
-};
-
-$('addExercise').onclick = () => {
-  const name = $('exerciseInput').value.trim();
-  if (!name) return;
-
-  data.workouts.find(x => x.id === current).ex.push([name, 3, 12]);
-
-  $('exerciseInput').value = '';
-  save();
-  drawExercises();
-};
-
-$('finish').onclick = e => {
-  e.preventDefault();
-
-  const w = data.workouts.find(x => x.id === current);
-
-  data.history.unshift({
-    name: w.name,
-    count: w.ex.length,
-    date: new Date().toISOString()
-  });
-
-  $('routineDialog').close();
-  save();
-};
-
+(()=>{'use strict';
+const KEY='forge-metal-v1',starter=[
+{id:'a',name:'A — Peito + Bíceps',desc:'Panobianco • foco em força e hipertrofia',ex:[['Supino reto',4,12],['Supino inclinado',4,12],['Chest press',3,12],['Rosca no cross',3,12]]},
+{id:'b',name:'B — Inferiores',desc:'Academia do condomínio • controle e técnica',ex:[['Cadeira extensora',3,15],['Mesa flexora',3,15],['Panturrilha',3,15]]},
+{id:'c',name:'C — Costas + Ombros + Tríceps',desc:'Panobianco • volume equilibrado',ex:[['Puxada frontal',3,12],['Remada baixa',3,12],['Elevação lateral',3,15],['Tríceps corda',3,12]]}];
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),dateLabel=v=>v?new Date(v+'T12:00:00').toLocaleDateString('pt-BR'):'—';
+let data;try{data=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){data=null}
+if(!data||typeof data!=='object')data={workouts:starter,history:[]};
+if(!Array.isArray(data.workouts))data.workouts=starter;if(!Array.isArray(data.history))data.history=[];
+if(!Array.isArray(data.measurements))data.measurements=[];if(!Array.isArray(data.exerciseLogs))data.exerciseLogs=[];
+data.workouts=data.workouts.map((w,i)=>({...w,id:w.id||'w'+i,ex:Array.isArray(w.ex)?w.ex:[]}));
+const save=()=>localStorage.setItem(KEY,JSON.stringify(data));save();
+let editingId=null,selectedId=null,timer;
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function showView(n){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+n));document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.view===n));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
+function card(w){let c=document.createElement('article');c.className='workout-card';let mark=document.createElement('div');mark.className='workout-letter';mark.textContent=(w.name.match(/[A-Z0-9]/)||['⚒'])[0];let info=document.createElement('div');info.className='workout-info';let strong=document.createElement('strong');strong.textContent=w.name;let small=document.createElement('small');small.textContent=w.ex.length+' exercícios'+(w.desc?' • '+w.desc:'');info.append(strong,small);let btn=document.createElement('button');btn.className='arrow-button';btn.textContent='›';btn.addEventListener('click',()=>detail(w.id));c.append(mark,info,btn);c.addEventListener('click',e=>{if(e.target!==btn)detail(w.id)});return c}
+function historyList(el,items){el.innerHTML='';if(!items.length){el.innerHTML='<div class="empty-state">Nenhuma sessão registrada ainda.<br>Abra um treino e marque a sessão como concluída.</div>';return}items.slice(0,5).forEach(h=>{let r=document.createElement('div');r.className='history-item';let a=document.createElement('strong'),b=document.createElement('small');a.textContent=h.name||'Treino';b.textContent=dateLabel(h.date);r.append(a,b);el.append(r)})}
+function weekCount(){let now=new Date(),start=new Date(now);start.setDate(now.getDate()-((now.getDay()+6)%7));start.setHours(0,0,0,0);return data.history.filter(h=>{let d=new Date((h.date||'')+'T12:00:00');return !isNaN(d)&&d>=start&&d<=now}).length}
+function render(){let m=[...data.measurements].sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];$('stat-total').textContent=data.history.length;$('stat-week').textContent=weekCount();$('stat-weight').textContent=m&&m.weight!=null?m.weight.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' kg':'—';$('stat-fat').textContent=m&&m.fat!=null?m.fat.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%':'—';$('stat-weight-date').textContent=m&&m.weight!=null?'registro de '+dateLabel(m.date):'adicione uma avaliação';$('stat-fat-date').textContent=m&&m.fat!=null?'registro de '+dateLabel(m.date):'adicione uma avaliação';$('home-workouts').innerHTML='';data.workouts.slice(0,3).forEach(w=>$('home-workouts').append(card(w)));$('workouts-list').innerHTML='';data.workouts.forEach(w=>$('workouts-list').append(card(w)));$('workout-total-label').textContent=data.workouts.length+' TREINO(S) CADASTRADO(S)';historyList($('home-history'),[...data.history].reverse());renderMeasurements();renderFrequency()}
+function renderMeasurements(){let el=$('measurements-list');el.innerHTML='';let list=[...data.measurements].sort((a,b)=>(b.date||'').localeCompare(a.date||''));if(!list.length){el.innerHTML='<div class="empty-state">Sem avaliações cadastradas. Use o formulário acima para começar seu histórico.</div>';return}list.forEach(m=>{let r=document.createElement('div');r.className='history-item';let a=document.createElement('strong'),b=document.createElement('small');a.textContent=dateLabel(m.date);b.textContent=[m.weight!=null?m.weight.toLocaleString('pt-BR')+' kg':null,m.fat!=null?m.fat.toLocaleString('pt-BR')+'% gordura':null].filter(Boolean).join(' • ')||'Sem valores';r.append(a,b);el.append(r)})}
+function renderFrequency(){let now=new Date(),cut=new Date(now);cut.setDate(now.getDate()-29);cut.setHours(0,0,0,0);let recent=data.history.filter(h=>{let d=new Date((h.date||'')+'T12:00:00');return !isNaN(d)&&d>=cut&&d<=now});$('frequency-month').textContent=recent.length;let counts=[0,0,0,0,0,0,0],days=['S','T','Q','Q','S','S','D'];recent.forEach(h=>counts[(new Date(h.date+'T12:00:00').getDay()+6)%7]++);let max=Math.max(1,...counts);$('frequency-bars').innerHTML='';counts.forEach((n,i)=>{let col=document.createElement('div');col.className='bar-col';let bar=document.createElement('div');bar.className='bar';bar.style.height=(n?Math.max(8,n/max*58):3)+'px';bar.title=n+' sessão(ões)';let lab=document.createElement('span');lab.className='bar-label';lab.textContent=days[i];col.append(bar,lab);$('frequency-bars').append(col)})}
+function addRow(name,sets,reps){let row=document.createElement('div');row.className='exercise-row';let title=document.createElement('span');title.textContent=name;let s=document.createElement('input');s.type='number';s.min='1';s.max='20';s.value=sets||3;s.setAttribute('aria-label','Séries');let r=document.createElement('input');r.value=reps||12;r.setAttribute('aria-label','Repetições');let del=document.createElement('button');del.type='button';del.className='remove-exercise';del.textContent='×';del.addEventListener('click',()=>row.remove());row.append(title,s,r,del);row.dataset.name=name;$('exercise-rows').append(row)}
+function openEditor(id){editingId=id;let w=id?data.workouts.find(x=>x.id===id):null;$('dialog-title').textContent=w?'Editar treino':'Novo treino';$('routine-name').value=w?.name||'';$('routine-desc').value=w?.desc||'';$('exercise-rows').innerHTML='';(w?.ex||[]).forEach(x=>addRow(x[0],x[1],x[2]));$('workout-dialog').showModal()}
+$('new-workout').addEventListener('click',()=>openEditor());$('close-dialog').addEventListener('click',()=>$('workout-dialog').close());
+$('add-exercise').addEventListener('click',()=>{let n=$('exercise-name').value.trim();if(!n){toast('Digite o nome do exercício.');return}addRow(n,$('exercise-sets').value,$('exercise-reps').value);$('exercise-name').value=''});
+$('workout-form').addEventListener('submit',e=>{e.preventDefault();let name=$('routine-name').value.trim();if(!name)return;let ex=[...$('exercise-rows').children].map(r=>[r.dataset.name,Math.max(1,Number(r.querySelectorAll('input')[0].value)||3),r.querySelectorAll('input')[1].value.trim()||'12']);let w={id:editingId||'w'+Date.now(),name,desc:$('routine-desc').value.trim(),ex};if(editingId){let i=data.workouts.findIndex(x=>x.id===editingId);if(i>=0)data.workouts[i]=w}else data.workouts.push(w);save();$('workout-dialog').close();render();toast('Treino salvo com sucesso.')});
+function detail(id){let w=data.workouts.find(x=>x.id===id);if(!w)return;selectedId=id;$('detail-title').textContent=w.name;$('detail-desc').textContent=w.desc||'';$('detail-exercises').innerHTML='';if(!w.ex.length)$('detail-exercises').innerHTML='<div class="empty-state">Nenhum exercício cadastrado neste treino.</div>';w.ex.forEach(x=>{let r=document.createElement('div');r.className='detail-exercise';let a=document.createElement('span'),b=document.createElement('small');a.textContent=x[0];b.textContent=x[1]+' × '+x[2];r.append(a,b);$('detail-exercises').append(r)});$('detail-dialog').showModal()}
+$('close-detail').addEventListener('click',()=>$('detail-dialog').close());$('complete-workout').addEventListener('click',()=>{let w=data.workouts.find(x=>x.id===selectedId);if(!w)return;data.history.push({name:w.name,count:w.ex.length,date:today()});save();$('detail-dialog').close();render();toast('Sessão registrada. Bom trabalho!')});
+$('measurement-date').value=today();$('measurement-form').addEventListener('submit',e=>{e.preventDefault();let date=$('measurement-date').value,weight=$('measurement-weight').value===''?null:Number($('measurement-weight').value),fat=$('measurement-fat').value===''?null:Number($('measurement-fat').value);if(!date||(weight===null&&fat===null)){toast('Informe pelo menos peso ou gordura corporal.');return}if(weight!==null&&(weight<=0||weight>500)){toast('Confira o peso informado.');return}if(fat!==null&&(fat<=0||fat>70)){toast('Confira o percentual de gordura.');return}data.measurements.push({date,weight,fat});save();$('measurement-weight').value='';$('measurement-fat').value='';$('measurement-date').value=today();render();toast('Avaliação salva.')});
 render();
+})();
