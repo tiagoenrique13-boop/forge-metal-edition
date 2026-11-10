@@ -1,17 +1,1 @@
-{
-  "name": "FORGE — Personal Training",
-  "short_name": "FORGE",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#09090d",
-  "theme_color": "#09090d",
-  "description": "Build your strength. Own your evolution.",
-  "icons": [
-    {
-      "src": "assets/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
-}
+{"name":"FORGE — Personal Training","short_name":"FORGE","description":"Build your strength. Own your evolution.","start_url":"./","scope":"./","display":"standalone","background_color":"#09090d","theme_color":"#09090d","icons":[{"src":"assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
