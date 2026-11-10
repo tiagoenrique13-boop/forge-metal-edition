@@ -1,0 +1,185 @@
+const KEY = 'forge-metal-v1';
+
+const starter = [
+  {
+    id: 'a',
+    name: 'A — Peito + Bíceps',
+    desc: 'Panobianco • foco em força e hipertrofia',
+    ex: [
+      ['Supino reto', 4, 12],
+      ['Supino inclinado', 4, 12],
+      ['Chest press', 3, 12],
+      ['Rosca no cross', 3, 12]
+    ]
+  },
+  {
+    id: 'b',
+    name: 'B — Inferiores',
+    desc: 'Academia do condomínio • controle e técnica',
+    ex: [
+      ['Cadeira extensora', 3, 15],
+      ['Mesa flexora', 3, 15],
+      ['Panturrilha', 3, 15]
+    ]
+  },
+  {
+    id: 'c',
+    name: 'C — Costas + Ombros + Tríceps',
+    desc: 'Panobianco • volume equilibrado',
+    ex: [
+      ['Puxada frontal', 3, 12],
+      ['Remada baixa', 3, 12],
+      ['Elevação lateral', 3, 15],
+      ['Tríceps corda', 3, 12]
+    ]
+  }
+];
+
+let data;
+
+try {
+  data = JSON.parse(localStorage.getItem(KEY));
+} catch (e) {}
+
+if (!data) {
+  data = { workouts: starter, history: [] };
+}
+
+let current = null;
+
+const $ = id => document.getElementById(id);
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}[c]));
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(data));
+  render();
+}
+
+function render() {
+  $('workoutCount').textContent = data.workouts.length;
+  $('sessionCount').textContent = data.history.length;
+
+  $('workouts').innerHTML = data.workouts.map((w, i) => `
+    <article class="workout" data-id="${w.id}">
+      <span class="kicker">ROUTINE ${String(i + 1).padStart(2, '0')}</span>
+      <h3>${esc(w.name)}</h3>
+      <p>${esc(w.desc || 'Personal training routine')} · ${w.ex.length} exercícios</p>
+    </article>
+  `).join('') || '<div class="empty">Crie sua primeira rotina de treino.</div>';
+
+  $('workouts').querySelectorAll('[data-id]').forEach(el => {
+    el.onclick = () => open(el.dataset.id);
+  });
+
+  $('history').innerHTML = data.history.slice(0, 6).map(h => `
+    <div class="history-item">
+      <span>${esc(h.name)}</span>
+      <small>${new Date(h.date).toLocaleDateString('pt-BR')} · ${h.count} exercícios</small>
+    </div>
+  `).join('') || '<div class="empty">Suas sessões concluídas aparecerão aqui.</div>';
+}
+
+function open(id) {
+  current = id;
+  const w = data.workouts.find(x => x.id === id);
+
+  $('routineTitle').textContent = w.name;
+  $('routineDescription').textContent = w.desc || 'Personalize os exercícios desta rotina.';
+
+  drawExercises();
+  $('routineDialog').showModal();
+}
+
+function drawExercises() {
+  const w = data.workouts.find(x => x.id === current);
+
+  $('exerciseRows').innerHTML = `
+    <div class="exercise-head">
+      <span>EXERCÍCIO</span>
+      <span>SÉRIES</span>
+      <span>REPS</span>
+      <span></span>
+    </div>
+    ${w.ex.map((x, i) => `
+      <div class="exercise-row">
+        <span>${esc(x[0])}</span>
+        <input type="number" min="1" value="${x[1]}" data-i="${i}" data-k="1">
+        <input type="number" min="1" value="${x[2]}" data-i="${i}" data-k="2">
+        <button type="button" data-del="${i}">×</button>
+      </div>
+    `).join('')}
+  `;
+
+  $('exerciseRows').querySelectorAll('input').forEach(el => {
+    el.onchange = () => {
+      w.ex[+el.dataset.i][+el.dataset.k] = Math.max(1, +el.value || 1);
+      save();
+    };
+  });
+
+  $('exerciseRows').querySelectorAll('[data-del]').forEach(el => {
+    el.onclick = () => {
+      w.ex.splice(+el.dataset.del, 1);
+      save();
+      drawExercises();
+    };
+  });
+}
+
+$('newWorkout').onclick = () => {
+  $('routineName').value = '';
+  $('routineDesc').value = '';
+  $('createDialog').showModal();
+};
+
+$('createSave').onclick = e => {
+  e.preventDefault();
+
+  const name = $('routineName').value.trim();
+  if (!name) return;
+
+  data.workouts.push({
+    id: Date.now().toString(),
+    name,
+    desc: $('routineDesc').value.trim(),
+    ex: []
+  });
+
+  $('createDialog').close();
+  save();
+};
+
+$('addExercise').onclick = () => {
+  const name = $('exerciseInput').value.trim();
+  if (!name) return;
+
+  data.workouts.find(x => x.id === current).ex.push([name, 3, 12]);
+
+  $('exerciseInput').value = '';
+  save();
+  drawExercises();
+};
+
+$('finish').onclick = e => {
+  e.preventDefault();
+
+  const w = data.workouts.find(x => x.id === current);
+
+  data.history.unshift({
+    name: w.name,
+    count: w.ex.length,
+    date: new Date().toISOString()
+  });
+
+  $('routineDialog').close();
+  save();
+};
+
+render();
