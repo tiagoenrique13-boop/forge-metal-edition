@@ -2,47 +2,33 @@
 
 ### BUILD YOUR STRENGTH. OWN YOUR EVOLUTION.
 
-A personal training platform built for people who want to track their workouts, monitor progress and evolve consistently.
+MVP de uma plataforma pessoal para organizar treinos e acompanhar consistência.
 
-## 🤘 The Vision
+## Funcionalidades
+- Rotinas iniciais A/B/C editáveis
+- Criar rotinas personalizadas
+- Adicionar e remover exercícios
+- Ajustar séries e repetições
+- Registrar sessões concluídas
+- Interface responsiva para celular
+- Persistência local via LocalStorage
 
-FORGE combines training organization, performance tracking and a distinctive metal-inspired visual identity.
+## Identidade visual
+Estética industrial / heavy metal original:
+- Obsidian Black `#09090D`
+- Crimson Red `#B51F2A`
+- Steel Gray `#AEB0B8`
+- Bone White `#D9D0BD`
 
-## Features
+## Tecnologia
+HTML, CSS, JavaScript e manifest PWA.
 
-- Custom workout routines
-- Exercise library
-- YouTube exercise videos
-- Sets, reps and weight tracking
-- Training history and progress
-- Personal profiles
-- Optional workout sharing
+## Publicar no GitHub Pages
+1. Abra Settings no repositório.
+2. Acesse Pages.
+3. Em Build and deployment, selecione Deploy from a branch.
+4. Escolha `main` e `/ (root)`.
+5. Salve e aguarde a URL de publicação.
 
-## Visual Identity
-
-Dark industrial aesthetics inspired by heavy metal culture.
-
-- Obsidian Black
-- Crimson Red
-- Steel Gray
-- Bone White
-
-## Technology
-
-- HTML, CSS and JavaScript
-- Progressive Web App (PWA)
-- Local data storage (MVP)
-- Future backend: Supabase
-
-## Project Status
-
-🚧 MVP — Under Development
-
-## Privacy
-
-Each user's training data should remain private by default.
-Sharing will be optional and controlled by the user.
-
----
-
-**FORGE — BUILD YOUR STRENGTH. OWN YOUR EVOLUTION.**
+## Limitação do MVP
+Os dados ficam salvos somente no navegador/dispositivo atual. Ainda não há login, sincronização em nuvem ou compartilhamento entre usuários. Não armazene informações sensíveis.
