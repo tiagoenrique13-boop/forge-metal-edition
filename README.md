@@ -1,22 +1,11 @@
-# FORGE — Personal Training | 1.1
+# FORGE 1.2 — Workout Engine
 
-## Novidades
-- Navegação funcional entre Início, Treinos e Evolução.
-- Painel com sessões concluídas, frequência semanal, peso e gordura corporal mais recentes.
-- Cadastro e edição de treinos e exercícios.
-- Registro de avaliações corporais e histórico.
-- Frequência de sessões nos últimos 30 dias.
+- Carga e repetições independentes por série.
+- Marcação de séries concluídas.
+- Descanso por exercício, padrão de 90 segundos, ajustável em 15 segundos.
+- Comparação com o último registro do exercício.
+- Sessão em andamento salva no aparelho.
+- Finalização registra duração, séries e desempenho por exercício.
+- Preserva a chave LocalStorage `forge-metal-v1` e dados do 1.1.
 
-## Publicação
-Envie/substitua os arquivos mantendo a estrutura:
-- `index.html`
-- `manifest.webmanifest`
-- `css/theme-metal.css`
-- `js/app.js`
-- `assets/icon.svg`
-
-## Preservação de dados
-A versão mantém a chave LocalStorage `forge-metal-v1`, preservando treinos e histórico do MVP. Os campos `measurements` e `exerciseLogs` são adicionados sem apagar os dados anteriores.
-
-## Próximas etapas
-Execução com carga/repetições por série, cronômetro, vídeos e análise de volume serão implementados nas próximas versões.
+No GitHub, substitua `index.html`, `css/theme-metal.css` e `js/app.js`. Mantenha `assets/icon.svg` e `manifest.webmanifest` da versão 1.1. O temporizador funciona enquanto a página está ativa; iOS pode suspender contagens em segundo plano. Vídeos individuais serão adicionados após validarmos links de demonstração confiáveis.
