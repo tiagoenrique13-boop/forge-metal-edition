@@ -1,1 +1,17 @@
-{"name":"FORGE — Personal Training","short_name":"FORGE","start_url":"./","scope":"./","display":"standalone","background_color":"#09090d","theme_color":"#09090d","icons":[{"src":"assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "POWERSET — Personal Training",
+  "short_name": "POWERSET",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#09090d",
+  "theme_color": "#09090d",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
