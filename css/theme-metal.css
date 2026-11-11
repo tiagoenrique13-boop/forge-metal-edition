@@ -14,3 +14,19 @@ nav{overflow-x:auto}nav button{white-space:nowrap;min-width:68px}
 .backup-panel{border:1px solid #5b252c;background:linear-gradient(135deg,#171116,#0b0b10);padding:15px;margin:20px 0;border-radius:8px}
 .backup-panel h2{margin:4px 0 8px}.backup-panel .muted{font-size:11px;line-height:1.5}
 .backup-panel button{margin:5px 5px 0 0;padding:11px 12px;font-size:9px}
+
+/* POWERSET 1.4 — performance dashboard */
+:root{--red:#b51f2a;--hot:#e33440}
+header b{font-size:30px;letter-spacing:2.5px}
+nav{overflow-x:auto}nav button{white-space:nowrap;min-width:65px;font-size:8px}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0}
+.metric{background:linear-gradient(145deg,#1c1820,#101015);border:1px solid #38313c;border-radius:8px;padding:13px;min-width:0}
+.metric small{font-size:8px;color:var(--muted);letter-spacing:.8px}.metric strong{display:block;font:800 clamp(22px,6vw,32px) 'Barlow Condensed';color:#f4f1eb;margin-top:7px;overflow-wrap:anywhere}
+.analytics-panel{background:#121117;border:1px solid var(--line);border-radius:8px;padding:14px;margin:13px 0}
+.analytics-panel h2{margin:2px 0 8px}.analytics-panel .muted{line-height:1.5}
+.bar-row{margin:13px 0}.bar-label{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:6px}.bar-label b{color:#e8d9d4;font-size:10px}.bar-track{height:9px;background:#29242d;border-radius:8px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,#8c1722,#e33440);border-radius:8px}
+#weekly-frequency{display:flex;justify-content:space-around;align-items:flex-end;gap:8px;min-height:125px;padding:8px 0}.freq-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;flex:1}.freq-col b{font-size:10px;color:#ddd}.freq-bar{width:100%;max-width:34px;background:linear-gradient(180deg,#e33440,#781923);border-radius:4px 4px 0 0;min-height:4px}.freq-col small{font-size:9px;color:var(--muted)}
+.chart-wrap{width:100%;overflow:hidden}.chart-wrap svg{width:100%;height:auto;display:block}.chart-latest{font-size:11px;color:var(--muted)}.chart-latest b{color:#f4f1eb}
+.record-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #302d36;padding:10px 0;font-size:11px}.record-row b{color:#ff626b;white-space:nowrap}
+.empty-state{font-size:11px;color:var(--muted);line-height:1.5;padding:10px 0}
+@media(max-width:390px){nav button{min-width:59px;font-size:7px;letter-spacing:0;padding:13px 1px}.metric{padding:10px}}
