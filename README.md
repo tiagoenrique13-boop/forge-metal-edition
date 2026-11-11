@@ -1,17 +1,22 @@
-# FORGE 1.3 — Exercise Library
+# FORGE 1.3.1 — Backup & Transferência
 
-Novidades:
-- Biblioteca de exercícios integrada aos treinos existentes.
-- Ficha por exercício: músculos, equipamento, execução, erros comuns e observações pessoais.
-- Associação de um vídeo do YouTube por exercício, com player incorporado e link externo.
-- Busca direcionada no YouTube priorizando Paulo Muzy, Léo Marinho e Renato Cariani; opção de buscar outros profissionais.
-- O usuário escolhe e cola o link do vídeo. Nenhuma API key é exposta no navegador.
+Adiciona exportação/importação de backup JSON para transferir os dados entre Safari e o app instalado no iPhone.
 
-Compatibilidade:
-- Mantém a chave LocalStorage `forge-metal-v1`.
-- Mantém os registros de treinos, medidas, histórico e sessão ativa.
-- Os dados novos ficam em `exerciseLibrary`, dentro do mesmo armazenamento local.
-- Não apague dados do Safari nem desinstale o PWA para atualizar.
+O backup inclui:
+- Rotinas e exercícios
+- Biblioteca, fichas e links de vídeos
+- Histórico e avaliações
+- Sessão ativa, se houver
 
-Atualização no GitHub:
-Substitua `index.html`, `css/theme-metal.css` e `js/app.js`. Mantenha `manifest.webmanifest` e `assets/icon.svg` atuais.
+Como transferir:
+1. No Safari, abra o FORGE 1.3.1 e toque em Início > Exportar Backup.
+2. Salve o arquivo JSON no app Arquivos.
+3. Abra o FORGE instalado na tela inicial, atualize-o para 1.3.1 e toque em Importar Backup.
+4. Selecione o JSON salvo no app Arquivos e confirme.
+
+Importante:
+- O processo cria um backup dos dados locais de destino antes de importar.
+- O import substitui os dados locais do app de destino pelo conteúdo do arquivo.
+- Não limpe os dados do Safari nem desinstale o app antes de exportar.
+- Mantém a chave `forge-metal-v1`.
+- Não substitua `manifest.webmanifest` nem `assets/icon.svg` ao atualizar.
