@@ -2,6 +2,31 @@
 const K='forge-metal-v1',SK='forge-active-session-v1',$=x=>document.getElementById(x),today=()=>new Date().toISOString().slice(0,10),now=()=>Date.now();
 const seed=[{id:'a',name:'A — Peito + Bíceps',desc:'Panobianco • foco em força e hipertrofia',ex:[['Supino reto',4,12],['Supino inclinado',4,12],['Chest press',3,12],['Rosca no cross',3,12]]},{id:'b',name:'B — Inferiores',desc:'Academia do condomínio • controle e técnica',ex:[['Cadeira extensora',3,15],['Mesa flexora',3,15],['Panturrilha',3,15]]},{id:'c',name:'C — Costas + Ombros + Tríceps',desc:'Panobianco • volume equilibrado',ex:[['Puxada frontal',3,12],['Remada baixa',3,12],['Elevação lateral',3,15],['Tríceps corda',3,12]]}];
 let d;try{d=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}if(!d||typeof d!=='object')d={workouts:seed,history:[]};if(!Array.isArray(d.workouts))d.workouts=seed;if(!Array.isArray(d.history))d.history=[];if(!Array.isArray(d.measurements))d.measurements=[];if(!Array.isArray(d.exerciseLogs))d.exerciseLogs=[];if(!d.exerciseLibrary||typeof d.exerciseLibrary!=='object')d.exerciseLibrary={};d.workouts=d.workouts.map((w,i)=>({...w,id:w.id||'w'+i,ex:Array.isArray(w.ex)?w.ex:[]}));const save=()=>localStorage.setItem(K,JSON.stringify(d));save();
+
+function downloadBackup(){
+ const payload={app:'FORGE',format:1,createdAt:new Date().toISOString(),data:d,activeSession:localStorage.getItem(SK)||null};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');
+ a.href=url;a.download='forge-backup-'+new Date().toISOString().slice(0,10)+'.json';
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ toast('Backup exportado. Confira o app Arquivos do iPhone.');
+}
+$('export-backup').onclick=downloadBackup;
+$('import-backup').onclick=()=>$('backup-file').click();
+$('backup-file').onchange=async e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ try{
+  const payload=JSON.parse(await file.text());
+  if(payload.app!=='FORGE'||!payload.data||!Array.isArray(payload.data.workouts))throw new Error('Arquivo não reconhecido como backup FORGE.');
+  if(!confirm('Importar este backup e substituir os dados locais deste FORGE? Um backup dos dados atuais será baixado antes.')){e.target.value='';return}
+  downloadBackup();
+  localStorage.setItem(K,JSON.stringify(payload.data));
+  if(payload.activeSession)localStorage.setItem(SK,payload.activeSession);else localStorage.removeItem(SK);
+  alert('Backup importado. O FORGE será recarregado.');location.reload();
+ }catch(err){alert('Não foi possível importar: '+err.message)}
+ e.target.value='';
+};
+
 const exKey=n=>String(n||'').trim().toLocaleLowerCase('pt-BR');
 const profile=n=>d.exerciseLibrary[exKey(n)]||{};
 let profileTarget='';
