@@ -10,3 +10,7 @@ nav{overflow-x:auto}nav button{white-space:nowrap;min-width:68px}
 .library-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.library-row .card-copy{flex:1;min-width:0}.library-row button{padding:8px;font-size:8px}
 .card-copy small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
 @media(max-width:390px){nav button{font-size:8px;letter-spacing:.3px;padding:13px 2px}}
+
+.backup-panel{border:1px solid #5b252c;background:linear-gradient(135deg,#171116,#0b0b10);padding:15px;margin:20px 0;border-radius:8px}
+.backup-panel h2{margin:4px 0 8px}.backup-panel .muted{font-size:11px;line-height:1.5}
+.backup-panel button{margin:5px 5px 0 0;padding:11px 12px;font-size:9px}
